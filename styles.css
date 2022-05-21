@@ -59,3 +59,7 @@
   .board > [data-status="marked"] {
     background-color: yellow;
   }
+
+  .undobtn{
+    pointer-events: fill;
+  }

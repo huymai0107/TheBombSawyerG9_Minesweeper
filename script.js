@@ -10,12 +10,14 @@ import {
   setCount,
   } from "./minesweeper.js"
 const BOARD_SIZE = 10
-const NUMBER_OF_MINES = 20
+const NUMBER_OF_MINES = 5
 let positions = []
 let state = []
 
 const board = createBoard(BOARD_SIZE, NUMBER_OF_MINES)
 const boardElement = document.querySelector(".board")
+const undo = document.querySelector(".undobtn")
+
 const minesLeftText = document.querySelector("[data-mine-count]")
 const notification = document.querySelector(".Notification")
 let i = 0
@@ -69,6 +71,8 @@ function checkGameEnd() {
     notification.textContent = "You Win"
     boardElement.addEventListener("click", stopProp, { capture: true })
     boardElement.addEventListener("contextmenu", stopProp, { capture: true })
+    undo.style.pointerEvents = 'none';
+
   }
 
 }
