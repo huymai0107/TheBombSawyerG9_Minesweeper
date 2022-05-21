@@ -10,7 +10,7 @@ import {
   setCount,
   } from "./minesweeper.js"
 const BOARD_SIZE = 10
-const NUMBER_OF_MINES = 5
+const NUMBER_OF_MINES = 20
 let positions = []
 let state = []
 
