@@ -4,7 +4,7 @@ export const TILE_STATUSES = {
     NUMBER: "number",
     MARKED: "marked",
   }
-  let flag = null
+
   export function createBoard(boardSize, numberOfMines) {
     const board = []
     const minePositions = getMinePositions(boardSize, numberOfMines)
@@ -25,42 +25,94 @@ export const TILE_STATUSES = {
           set status(value) {
             this.element.dataset.status = value
           },
-   
+    
         }
- 
+  
         row.push(tile)
       }
       board.push(row)
     }
- 
+  
     return board
   }
- function getMinePositions(boardSize, numberOfMines) {
-    const positions = []
- 
-    while (positions.length < numberOfMines) {
-      const position = {
-        x: randomNumber(boardSize),
-        y: randomNumber(boardSize),
-      }
- 
-      if (!positions.some(positionMatch.bind(null, position))) {
-        positions.push(position)
-      }
-    }
- 
-    return positions
-  }
- 
-  function positionMatch(a, b) {
-    return a.x === b.x && a.y === b.y
-  }
- 
-  function randomNumber(size) {
-    return Math.floor(Math.random() * size)
+
+export function markTile(tile) {
+  if (
+    tile.status !== TILE_STATUSES.HIDDEN &&
+    tile.status !== TILE_STATUSES.MARKED
+  ) {
+    return
   }
 
-  export function checkWin(board) {
+  if (tile.status === TILE_STATUSES.MARKED) {
+    tile.status = TILE_STATUSES.HIDDEN
+  } else {
+    tile.status = TILE_STATUSES.MARKED
+  }
+}
+
+let count = 0;
+export function getCount() {
+  return count;
+}
+export function setCount(number) {
+  count = number;
+}
+
+export function revealTile(board, position, tile){
+
+    
+      if (tile.mine) {
+        tile.status = TILE_STATUSES.MINE
+        position.push(tile)
+        count = count + 1;
+        return
+      }
+      if (tile.status !== TILE_STATUSES.HIDDEN) {
+        return
+      }
+       
+        tile.status = TILE_STATUSES.NUMBER
+        position.push(tile)
+        count = count + 1;
+      const adjacentTiles = nearbyTiles(board, tile)
+      const mines = adjacentTiles.filter(t => t.mine)
+      if (mines.length === 0) {
+        adjacentTiles.forEach(revealTile.bind(null,board,position))
+
+      } else {
+        tile.element.textContent = mines.length
+
+      }
+
+
+}
+
+
+
+
+
+function changeTile(board,tile){
+
+  
+    if (tile.mine) {
+      tile.status = TILE_STATUSES.MINE
+      return
+    }
+    if (tile.status !== TILE_STATUSES.HIDDEN) {
+      return
+    }
+    tile.status = TILE_STATUSES.NUMBER
+    const adjacentTiles = nearbyTiles(board, tile)
+    const mines = adjacentTiles.filter(t => t.mine)
+    if (mines.length === 0) {
+      adjacentTiles.forEach(changeTile.bind(null, board))
+    } else {
+      tile.element.textContent = mines.length
+    }
+    return adjacentTiles
+}
+export function checkWin(board) {
     return board.every(row => {
       return row.every(tile => {
         return (
@@ -72,12 +124,66 @@ export const TILE_STATUSES = {
       })
     })
   }
- 
   export function checkLose(board) {
-   
     return board.some(row => {
       return row.some(tile => {
         return tile.status === TILE_STATUSES.MINE
       })
     })
+  }
+
+export function remarkTile(board,tile){
+    if(tile.status === TILE_STATUSES.HIDDEN){
+        return 
+    }
+    else if(tile.status === TILE_STATUSES.MINE){
+        tile.status === TILE_STATUSES.HIDDEN
+    }
+    else if(tile.status === TILE_STATUSES.NUMBER ){
+        if(tile.element.textContent === ''){
+            console.log('j')
+        }
+        tile.element.textContent = null
+    }
+    tile.status = TILE_STATUSES.HIDDEN
+}
+
+//need
+function nearbyTiles(board, { x, y }) {
+    const tiles = []
+  
+    for (let xOffset = -1; xOffset <= 1; xOffset++) {
+      for (let yOffset = -1; yOffset <= 1; yOffset++) {
+        const tile = board[x + xOffset]?.[y + yOffset]
+        if (tile) tiles.push(tile)
+      }
+    }
+    return tiles
+  }
+
+
+
+  function getMinePositions(boardSize, numberOfMines) {
+    const positions = []
+  
+    while (positions.length < numberOfMines) {
+      const position = {
+        x: randomNumber(boardSize),
+        y: randomNumber(boardSize),
+      }
+  
+      if (!positions.some(positionMatch.bind(null, position))) {
+        positions.push(position)
+      }
+    }
+  
+    return positions
+  }
+  
+  function positionMatch(a, b) {
+    return a.x === b.x && a.y === b.y
+  }
+  
+  function randomNumber(size) {
+    return Math.floor(Math.random() * size)
   }
