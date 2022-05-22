@@ -55,7 +55,6 @@ function listMinesLeft() {
     }, 0)
   
     minesLeftText.textContent = NUMBER_OF_MINES - markedTilesCount
-    thenewMineLeft =  NUMBER_OF_MINES - markedTilesCount
 
 }
 
