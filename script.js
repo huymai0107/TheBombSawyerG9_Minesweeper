@@ -82,9 +82,7 @@ function stopProp(e) {
 }
 
 function execute(){
-  // boardElement.addEventListener("click", { capture: false })
 
-  boardElement.addEventListener("contextmenu",{ capture: false })
   remarkTile(board, positions.pop())
 
 }
