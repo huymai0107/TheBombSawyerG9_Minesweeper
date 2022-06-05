@@ -85,11 +85,11 @@ function execute(){
 
 document.getElementById('undo').onclick = function(){
         boardElement.style.pointerEvents = 'fill';
-        n = state.pop()
         notification.textContent = ""
-        for (let index = 0; index < n; index++) {
+        for (let index = 0; index < state[state.length - 1]; index++) {
           execute();
         }
+        state.pop()
   }
  
   
