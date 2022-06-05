@@ -60,8 +60,6 @@ export function setCount(number) {
 }
 
 export function revealTile(board, position, tile){
-
-    
       if (tile.mine) {
         tile.status = TILE_STATUSES.MINE
         position.push(tile)

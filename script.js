@@ -53,7 +53,6 @@ function listMinesLeft() {
         count + row.filter(tile => tile.status === TILE_STATUSES.MARKED).length
       )
     }, 0)
-  
     minesLeftText.textContent = NUMBER_OF_MINES - markedTilesCount
 
 }
@@ -77,23 +76,20 @@ function checkGameEnd() {
 }
 
 function stopProp(e) {
-
     e.stopImmediatePropagation();
 }
 
 function execute(){
-
   remarkTile(board, positions.pop())
-
 }
 
 document.getElementById('undo').onclick = function(){
         boardElement.style.pointerEvents = 'fill';
+        n = state.pop()
         notification.textContent = ""
-        for (let index = 0; index < state[state.length - 1]; index++) {
+        for (let index = 0; index < n; index++) {
           execute();
         }
-        state.pop()
   }
  
   
